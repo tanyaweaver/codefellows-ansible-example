@@ -7,7 +7,7 @@
 
   roles:
     - role: django
-    # - role: gunicorn
+    - role: gunicorn
     # - role: jdauphant.nginx
     #   sudo: yes
     #   nginx_sites:
