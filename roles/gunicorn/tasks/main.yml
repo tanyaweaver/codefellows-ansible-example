@@ -6,8 +6,8 @@
 
 - name: Create gunicorn Upstart Job
   sudo: yes
-  template: src=djangoblog.conf.j2 dest=/etc/init/djangoblog.conf
+  template: src=djang_imager.conf.j2 dest=/etc/init/django_imager.conf
 
 - name: Start gunicorn Upstart Job
   sudo: yes
-  service: name=djangoblog state=restarted
+  service: name=django_imager state=restarted
