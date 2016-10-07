@@ -1,4 +1,4 @@
-description "djangoblog"
+description "django_imager"
 
 start on (filesystem)
 stop on runlevel [016]
@@ -10,4 +10,9 @@ chdir {{ django_home }}
 env DEBUG=False
 env DJANGO_SETTINGS_MODULE=imagersite.settings
 env DATABASE_URL={{ db_url }}
+env EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+env EMAIL_HOST='smtp.gmail.com'
+env EMAIL_HOST_USER='django401imager@gmail.com'
+env DEFAULT_FROM_EMAIL='django401imager@gmail.com'
+env ALLOWED_HOSTS=["ec2-54-244-205-179.us-west-2.compute.amazonaws.com","localhost"]
 exec gunicorn -b 127.0.0.1:8000 -w 4 imagersite.wsgi --error-logfile /tmp/gunicorn-error.log
