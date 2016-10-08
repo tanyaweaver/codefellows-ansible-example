@@ -1,13 +1,16 @@
 ---
 
-- name: Install Requirements
-  sudo: yes
-  pip: name=gunicorn state=present
+- name: Install Requirement
+  pip:
+    name: gunicorn
+    virtualenv: "{{ venv_home }}"
+    state: present
+  
 
 - name: Create gunicorn Upstart Job
   sudo: yes
-  template: src=djangoblog.conf.j2 dest=/etc/init/djangoblog.conf
+  template: src=django-imager.conf.j2 dest=/etc/init/django-imager.conf
 
 - name: Start gunicorn Upstart Job
   sudo: yes
-  service: name=djangoblog state=restarted
+  service: name=django-imager state=restarted

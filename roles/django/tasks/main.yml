@@ -6,19 +6,31 @@
   with_items:
     - build-essential
     - python-dev
+    - python3-dev
+    - python-virtualenv
+    - python3.4-venv
     - python-pip
     - postgresql-client
     - libpq-dev
-    - python-pip
+    - python3-psycopg2
     - python-psycopg2
     - git
+    - libjpeg8-dev
 
 - name: Clone Django Repository
-  git: repo=https://github.com/cewing/djangoblog_uwpce.git dest={{ django_home }} force=yes
+  git: repo={{ repo }} dest={{ django_home }} force=yes version=HEAD
+
+- name: Change Media Ownership
+  sudo: yes
+  file: path={{ media_path }} owner={{ app_user }} recurse=yes state=directory mode=775
+
+- name: Change Static Ownership
+  sudo: yes
+  file: path={{ static_path }} owner={{ app_user }} recurse=yes state=directory
 
 - name: Install Python Dependencies
-  sudo: yes
   pip:
+    virtualenv: "{{ venv_home }}"
     state: present
     requirements: "{{ django_home }}/requirements.txt"
 
@@ -29,23 +41,27 @@
 - name: Get DB Password
   include_vars: secrets.yml
 
-
 - name: Set DB URL
-  set_fact: 
+  set_fact:
     db_url: "{{ db_host.ec2_engine }}://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }}"
 
 - name: Run Migrations
   environment:
+    DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+    SECRET_KEY: "{{ secret_key }}"
     DATABASE_URL: "{{ db_url }}"
   django_manage:
     app_path: "{{ django_home }}"
-    settings: mysite.production
     command: migrate
+    virtualenv: "{{ venv_home }}"
+
 
 - name: Collect Static Files
   environment:
+    DJANGO_SETTINGS_MODULE: "{{ django_settings_module }}"
+    SECRET_KEY: "{{ secret_key }}"
     DATABASE_URL: "{{ db_url }}"
   django_manage:
     app_path: "{{ django_home }}"
-    settings: mysite.production
     command: collectstatic
+    virtualenv: "{{ venv_home }}"
