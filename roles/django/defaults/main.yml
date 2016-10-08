@@ -2,3 +2,9 @@ user_home: /home/ubuntu
 django_home: "{{ user_home }}/checkout"
 venv_home: "{{ user_home }}/venv"
 rds_db_instance: imager
+media_path: "{{ django_home }}/media"
+static_path: "{{ django_home }}/static"
+app_user: "www-data"
+repo: "https://github.com/tanyaweaver/django-imager"
+django_settings_module: "imagersite.settings"
+secret_key: "secret"

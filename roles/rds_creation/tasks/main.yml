@@ -13,8 +13,8 @@
     instance_type: db.t2.micro
     license_model: postgresql-license
     vpc_security_groups: sg-2edc0d57
-    zone: us-west-2b
-    region: us-west-2
+    zone: '{{ zone }}'
+    region: "{{ region }}"
     size: 5
     username: imageruser
     password: "{{ db_password }}"
